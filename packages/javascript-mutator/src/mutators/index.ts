@@ -10,6 +10,7 @@ import StringLiteralMutator from './StringLiteralMutator';
 import LogicalOperatorMutator from './LogicalOperatorMutator';
 import UnaryOperatorMutator from './UnaryOperatorMutator';
 import UpdateOperatorMutator from './UpdateOperatorMutator';
+import MethodExpressionMutator from './MethodExpressionMutator';
 
 export const nodeMutators = Object.freeze([
   new ArithmeticOperatorMutator(),
@@ -23,5 +24,6 @@ export const nodeMutators = Object.freeze([
   new ObjectLiteralMutator(),
   new StringLiteralMutator(),
   new UnaryOperatorMutator(),
-  new UpdateOperatorMutator()
+  new UpdateOperatorMutator(),
+  new MethodExpressionMutator()
 ]);

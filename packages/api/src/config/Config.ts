@@ -1,5 +1,4 @@
-import { LogLevel, MutationScoreThresholds, MutatorDescriptor, StrykerOptions, DashboardOptions } from '../../core';
-import { ReportType } from '../core/DashboardOptions';
+import { LogLevel, MutationScoreThresholds, MutatorDescriptor, StrykerOptions, DashboardOptions, ReportType } from '../../core';
 
 import defaultTempDirName from './DefaultTempDirName';
 
@@ -28,7 +27,7 @@ export default class Config implements StrykerOptions {
   public timeoutMS = 5000;
   public timeoutFactor = 1.5;
   public plugins: string[] = ['@stryker-mutator/*'];
-  public reporters: string[] = ['progress', 'clear-text'];
+  public reporters: string[] = ['html', 'progress', 'clear-text'];
   public coverageAnalysis: 'perTest' | 'all' | 'off' = 'off';
   public testRunner: string = 'command';
   public testFramework: string;
@@ -48,7 +47,7 @@ export default class Config implements StrykerOptions {
    */
   public dashboard: DashboardOptions = {
     baseUrl: 'https://dashboard.stryker-mutator.io/api/reports',
-    reportType: ReportType.MutationScore
+    reportType: ReportType.Full
   };
   public tempDirName: string = defaultTempDirName;
 

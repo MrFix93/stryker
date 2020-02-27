@@ -1,7 +1,5 @@
 import * as path from 'path';
 
-import jest from 'jest';
-
 import { createReactTsJestConfig } from '../utils/createReactJestConfig';
 
 import JestConfigLoader from './JestConfigLoader';
@@ -13,7 +11,7 @@ export default class ReactScriptsTSJestConfigLoader implements JestConfigLoader 
     this.projectRoot = projectRoot;
   }
 
-  public loadConfig(): jest.Configuration {
+  public loadConfig(): Jest.Configuration {
     try {
       // Get the location of react-ts script, this is later used to generate the Jest configuration used for React projects.
       const reactScriptsTsLocation = path.join(this.resolve('react-scripts-ts/package.json'), '..');
@@ -27,7 +25,7 @@ export default class ReactScriptsTSJestConfigLoader implements JestConfigLoader 
       return jestConfiguration;
     } catch (e) {
       if (this.isNodeErrnoException(e) && e.code === 'MODULE_NOT_FOUND') {
-        throw Error('Unable to locate package react-scripts-ts. ' + 'This package is required when projectType is set to "react-ts".');
+        throw Error('Unable to locate package react-scripts-ts. ' + 'This package is required when projectType is set to "create-react-app-ts".');
       }
       throw e;
     }
@@ -37,7 +35,7 @@ export default class ReactScriptsTSJestConfigLoader implements JestConfigLoader 
     return arg.code !== undefined;
   }
 
-  private createJestConfig(reactScriptsTsLocation: string): jest.Configuration {
+  private createJestConfig(reactScriptsTsLocation: string): Jest.Configuration {
     return createReactTsJestConfig((relativePath: string): string => path.join(reactScriptsTsLocation, relativePath), this.projectRoot, false);
   }
 }

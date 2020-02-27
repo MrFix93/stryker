@@ -1,5 +1,6 @@
 import { Config, ConfigEditor } from '@stryker-mutator/api/config';
-import jest from 'jest';
+import { Logger } from '@stryker-mutator/api/logging';
+import { commonTokens, tokens } from '@stryker-mutator/api/plugin';
 
 import CustomJestConfigLoader from './configLoaders/CustomJestConfigLoader';
 import JestConfigLoader from './configLoaders/JestConfigLoader';
@@ -10,6 +11,10 @@ import JEST_OVERRIDE_OPTIONS from './jestOverrideOptions';
 const DEFAULT_PROJECT_NAME = 'custom';
 
 export default class JestConfigEditor implements ConfigEditor {
+  public static inject = tokens(commonTokens.logger);
+
+  constructor(private readonly log: Logger) {}
+
   public edit(strykerConfig: Config): void {
     // If there is no Jest property on the Stryker config create it
     strykerConfig.jest = strykerConfig.jest || {};
@@ -28,16 +33,26 @@ export default class JestConfigEditor implements ConfigEditor {
     switch (projectType.toLowerCase()) {
       case DEFAULT_PROJECT_NAME:
         return new CustomJestConfigLoader(process.cwd());
+      case 'create-react-app':
+        return new ReactScriptsJestConfigLoader(process.cwd());
+      case 'create-react-app-ts':
+        return new ReactScriptsTSJestConfigLoader(process.cwd());
       case 'react':
+        this.log.warn(
+          'DEPRECATED: The projectType "react" is deprecated. Use projectType "create-react-app" for react projects created by "create-react-app" or use "custom" for other react projects.'
+        );
         return new ReactScriptsJestConfigLoader(process.cwd());
       case 'react-ts':
+        this.log.warn(
+          'DEPRECATED: The projectType "react-ts" is deprecated. Use projectType "create-react-app-ts" for react projects created by "create-react-app" or use "custom" for other react projects.'
+        );
         return new ReactScriptsTSJestConfigLoader(process.cwd());
       default:
         throw new Error(`No configLoader available for ${projectType}`);
     }
   }
 
-  private overrideProperties(config: jest.Configuration) {
+  private overrideProperties(config: Jest.Configuration) {
     return Object.assign(config, JEST_OVERRIDE_OPTIONS);
   }
 }
